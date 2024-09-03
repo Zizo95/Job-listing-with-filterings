@@ -1,38 +1,37 @@
 const input = document.querySelector("input");
-const frontends = document.querySelectorAll("#frontend");
-const backends = document.querySelectorAll("#backend");
-const juniors = document.querySelectorAll("#junior");
-const seniors = document.querySelectorAll("#senior");
-const fullstacks = document.querySelectorAll("#fullstack"); 
-const midweights = document.querySelectorAll("#midweight");
-const javascripts = document.querySelectorAll("#javascript");
-const reacts = document.querySelectorAll("#react");
-const csss = document.querySelectorAll("#css");
-const htmls = document.querySelectorAll("#html");
-const pythons = document.querySelectorAll("#python"); 
-const sasss = document.querySelectorAll("#sass");
-const ror = document.querySelector("#ror"); 
-const django = document.querySelector("#django"); 
-const vue = document.querySelector("#vue");
-const rubys = document.querySelectorAll("#ruby");
 const jobListings = document.querySelectorAll(".job-listing");
+const filters = [
+    ...document.querySelectorAll("#frontend, #backend, #junior, #senior, #fullstack, #midweight, #javascript, #react, #css, #html, #python, #sass, #ror, #django, #vue, #ruby")
+];
 
-frontends.forEach(frontend => {
-    frontend.addEventListener("click", function(){
+let selectedFilters = [];
+
+filters.forEach(filter => {
+    filter.addEventListener("click", function() {
         const keywordText = this.innerText;
-        input.placeholder = keywordText;
-        input.style.display = "block"
 
+        // Toggle the filter in the selectedFilters array
+        if (selectedFilters.includes(keywordText)) {
+            selectedFilters = selectedFilters.filter(filter => filter !== keywordText);
+        } else {
+            selectedFilters.push(keywordText);
+        }
+
+        // Update the input placeholder to show the selected filters
+        input.placeholder = selectedFilters.join(", ");
+        input.style.display = "block";
+        
+
+        // Filter job listings based on selected filters
         jobListings.forEach(jobListing => {
-            if (jobListing.innerText.toLowerCase().includes(keywordText.toLowerCase())) {
-                jobListing.style.display = 'flex'; 
-    
+            const jobText = jobListing.innerText.toLowerCase();
+            const matchesAllFilters = selectedFilters.every(filter => jobText.includes(filter.toLowerCase()));
+
+            if (matchesAllFilters) {
+                jobListing.style.display = 'flex';
             } else {
-                jobListing.style.display = 'none'; 
+                jobListing.style.display = 'none';
             }
         });
-    })
-})
-
-
-
+    });
+});
